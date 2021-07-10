@@ -1,0 +1,23 @@
+name: Release npm package
+on:
+  push:
+    branches: 
+      - main
+jobs:
+  default:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn --frozen-lockfile
+      - run: yarn build
+      - run: |
+          git config --global user.email "tj.koblentz@gmail.com"
+          git config --global user.name "TJ Koblentz (CI)"
+      - run: npx release-it --npm.skipChecks --ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TJK_TOKEN }}
