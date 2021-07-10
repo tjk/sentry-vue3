@@ -1,7 +1,10 @@
 {
   "name": "@tjk/sentry-vue3",
   "version": "6.2.3-alpha.0",
-  "repository": "git://github.com/tjk/sentry-vue3.git",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tjk/sentry-vue3.git"
+  },
   "homepage": "https://github.com/tjk/sentry-vue3",
   "author": "Sentry, TJ Koblentz",
   "license": "MIT",
@@ -34,5 +37,9 @@
     "build:bundle": "rollup --config",
     "build:es5": "tsc -p tsconfig.build.json",
     "build:esm": "tsc -p tsconfig.esm.json"
+  },
+  "description": "EXPERIMENTAL: Use at own risk!",
+  "bugs": {
+    "url": "https://github.com/tjk/sentry-vue3/issues"
   }
 }
