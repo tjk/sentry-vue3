@@ -22,7 +22,7 @@ To use:
 ```js
 import { createApp } from 'vue'
 import { createRouter } from 'vue-router'
-import * as Sentry, { vueRouterInstrumentation } from '@tjk/sentry-vue3'
+import * as Sentry from '@tjk/sentry-vue3'
 import RootComponent from './root.vue'
 
 const app = new createApp(RootComponent)
@@ -40,7 +40,7 @@ Sentry.init({
   logErrors: NODE_ENV === "development",
   integrations: [
     new Integrations.BrowserTracing({
-      routingInstrumentation: vueRouterInstrumentation(router),
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
     }),
   ],
   tracesSampleRate: 1.0,
