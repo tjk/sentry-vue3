@@ -2,6 +2,11 @@
 
 EXPERIMENTAL: Use at own risk!
 
+Possible issues:
+- internal API used may completely break / be wrong
+- "Didn't apply tracing hooks" logging now but it looked like it worked when i first tested
+- is it bad to start pageload transaction only once await router.isReady()? wrong route otherwise
+
 https://github.com/getsentry/sentry-javascript/issues/2925
 
 Based off of @sentry/vue + code from https://github.com/vuejs/devtools
