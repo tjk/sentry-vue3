@@ -7,8 +7,7 @@ import {
 import { Span, Transaction } from '@sentry/types'
 import { basename, logger, timestampWithMs } from '@sentry/utils'
 
-// match package.json... lazy
-const VERSION = '6.2.3-alpha.6'
+const VERSION = process.env.PKG_VERSION || 'development'
 
 // XXX not exported but can't write to vm.$options... so use these on instance._
 // https://v3.vuejs.org/guide/composition-api-lifecycle-hooks

@@ -1,6 +1,6 @@
 {
   "name": "@tjk/sentry-vue3",
-  "version": "6.2.3-alpha.6",
+  "version": "6.2.3-alpha.7",
   "publishConfig": {
     "access": "public"
   },
@@ -9,7 +9,6 @@
     "url": "git://github.com/tjk/sentry-vue3.git"
   },
   "files": [
-    "build/*",
     "dist/*",
     "esm/*"
   ],
@@ -30,23 +29,17 @@
   "devDependencies": {
     "npm-run-all": "^4.1.2",
     "release-it": "^14.10.0",
-    "rollup": "^2.53.0",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-license": "^0.8.1",
-    "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-terser": "^4.0.4",
-    "rollup-plugin-typescript2": "^0.21.0",
     "typescript": "^4.3.5",
     "vue": "^3",
     "vue-router": "^4"
   },
   "scripts": {
-    "build": "run-p build:es5 build:esm build:bundle",
-    "build:bundle": "rollup --config",
+    "build": "run-p build:es5 build:esm",
     "build:es5": "tsc -p tsconfig.build.json",
-    "build:esm": "tsc -p tsconfig.esm.json"
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "postbuild": "find build dist esm -type f | xargs sed -i \"s/process.env.PKG_VERSION/'$(node -p -e \"require('./package.json').version\")'/g\""
   },
-  "description": "EXPERIMENTAL: Use at own risk!",
+  "description": "@sentry/vue ported to vue 3 (EXPERIMENTAL: Use at own risk!)",
   "bugs": {
     "url": "https://github.com/tjk/sentry-vue3/issues"
   }
