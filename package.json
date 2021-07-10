@@ -1,6 +1,6 @@
 {
   "name": "@tjk/sentry-vue3",
-  "version": "6.2.3-alpha.2",
+  "version": "6.2.3-alpha.3",
   "publishConfig": {
     "access": "public"
   },
