@@ -1,6 +1,6 @@
 import { captureException } from '@sentry/browser';
 import { Transaction, TransactionContext } from '@sentry/types';
-import type { Route, Router } from 'vue-router';
+import type { RouteLocationNormalized, Router } from 'vue-router';
 
 export type VueRouterInstrumentation = <T extends Transaction>(
   startTransaction: (context: TransactionContext) => T | undefined,
@@ -8,7 +8,7 @@ export type VueRouterInstrumentation = <T extends Transaction>(
   startTransactionOnLocationChange?: boolean,
 ) => void;
 
-function getTransactionContext(route: Route) {
+function getTransactionContext(route: RouteLocationNormalized) {
   return {
     name: route.name || route.path,
     tags: {
@@ -33,7 +33,7 @@ export function vueRouterInstrumentation(router: Router): VueRouterInstrumentati
         startTransaction({
           ...getTransactionContext(to),
           op: "navigation",
-        })
+        } as TransactionContext)
       }
       next()
     })
@@ -43,7 +43,7 @@ export function vueRouterInstrumentation(router: Router): VueRouterInstrumentati
       startTransaction({
         ...getTransactionContext(router.currentRoute.value),
         op: "pageload",
-      })
+      } as TransactionContext)
     }
   }
 }

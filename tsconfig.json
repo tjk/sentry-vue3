@@ -12,8 +12,6 @@
       "webpack-env"
     ],
     "allowJs": true,
-    // Strict
-    "noImplicitAny": false,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "strictBindCallApply": true,

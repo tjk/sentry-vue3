@@ -1,11 +1,11 @@
-import { App, ComponentPublicInstance, RendererElement, warn } from "vue"
+import { App, ComponentPublicInstance, RendererElement, warn } from 'vue'
 import {
   BrowserOptions,
   getCurrentHub,
   init as browserInit,
-} from "@sentry/browser"
-import { Span, Transaction } from "@sentry/types"
-import { basename, logger, timestampWithMs } from "@sentry/utils"
+} from '@sentry/browser'
+import { Span, Transaction } from '@sentry/types'
+import { basename, logger, timestampWithMs } from '@sentry/utils'
 
 // match package.json... lazy
 const VERSION = '6.2.3-alpha.0'
@@ -13,16 +13,16 @@ const VERSION = '6.2.3-alpha.0'
 // XXX not exported but can't write to vm.$options... so use these on instance._
 // https://v3.vuejs.org/guide/composition-api-lifecycle-hooks
 const enum LifecycleHook {
-  BEFORE_CREATE = "bc",
-  CREATED = "c",
-  BEFORE_MOUNT = "bm",
-  MOUNTED = "m",
-  BEFORE_UPDATE = "bu",
-  UPDATED = "u",
-  BEFORE_UNMOUNT = "bum",
-  UNMOUNTED = "um",
-  DEACTIVATED = "da",
-  ACTIVATED = "a",
+  BEFORE_CREATE = 'bc',
+  CREATED = 'c',
+  BEFORE_MOUNT = 'bm',
+  MOUNTED = 'm',
+  BEFORE_UPDATE = 'bu',
+  UPDATED = 'u',
+  BEFORE_UNMOUNT = 'bum',
+  UNMOUNTED = 'um',
+  DEACTIVATED = 'da',
+  ACTIVATED = 'a',
 }
 
 // https://github.com/Microsoft/TypeScript/issues/25760#issuecomment-406158222
@@ -41,16 +41,16 @@ export interface VueOptions extends BrowserOptions {
    * When set to `false`, Sentry will suppress reporting of all props data
    * from your Vue components for privacy concerns.
    */
-  attachProps?: boolean
+  attachProps: boolean
 
   /**
    * When set to `true`, original Vue's `logError` will be called as well.
    * https://github.com/vuejs/vue/blob/c2b1cfe9ccd08835f2d99f6ce60f67b4de55187f/src/core/util/error.js#L38-L48
    */
-  logErrors?: boolean
+  logErrors: boolean
 
   /** {@link TracingOptions} */
-  tracingOptions?: Partial<TracingOptions>
+  tracingOptions: TracingOptions
 }
 
 /** Optional metadata attached to Sentry Event */
@@ -70,10 +70,10 @@ const HOOKS: { [key in Operation]: LifecycleHook[] } = {
   update: [LifecycleHook.BEFORE_UPDATE, LifecycleHook.UPDATED],
 }
 
-type Operation = "activate" | "create" | "unmount" | "mount" | "update"
+type Operation = 'activate' | 'create' | 'unmount' | 'mount' | 'update'
 
 function toUpper(_, c) {
-  return c ? c.toUpperCase() : ""
+  return c ? c.toUpperCase() : ''
 }
 
 function cached(fn) {
@@ -135,8 +135,8 @@ class VueHelper {
     this._attachErrorHandler()
 
     if (
-      "tracesSampleRate" in this._options ||
-      "tracesSampler" in this._options
+      'tracesSampleRate' in this._options ||
+      'tracesSampler' in this._options
     ) {
       this._startTracing()
     }
@@ -155,7 +155,7 @@ class VueHelper {
     }
     const file = options.__file // injected by vue-loader
     if (file) {
-      return classify(basename(file, ".vue"))
+      return classify(basename(file, '.vue'))
     }
   }
 
@@ -163,7 +163,7 @@ class VueHelper {
   private _getComponentName(instance: any) {
     const name = this._getComponentTypeName(instance.type || {})
     if (name) return name
-    if (instance.root === instance) return "Root"
+    if (instance.root === instance) return 'Root'
     for (const key in instance.parent?.type?.components) {
       if (instance.parent.type.components[key] === instance.type)
         return this._saveComponentName(instance, key)
@@ -172,7 +172,7 @@ class VueHelper {
       if (instance.appContext.components[key] === instance.type)
         return this._saveComponentName(instance, key)
     }
-    return "Anonymous Component"
+    return 'Anonymous Component'
   }
 
   private readonly _injectHook = (
@@ -196,7 +196,7 @@ class VueHelper {
   /** Keep it as attribute function, to keep correct `this` binding inside the hooks callbacks  */
   // eslint-disable-next-line @typescript-eslint/typedef
   private readonly _applyTracingHooks = (vm: ComponentPublicInstance): void => {
-    const instance = vm._ || vm
+    const instance = (vm as any)._ || vm
     // Don't attach twice, just in case
     if (this._installCache[instance.uid]) {
       return
@@ -226,8 +226,8 @@ class VueHelper {
           const activeTransaction = getActiveTransaction()
           if (activeTransaction) {
             this._rootSpan = activeTransaction.startChild({
-              description: "Application Render",
-              op: "Vue",
+              description: 'Application Render',
+              op: 'Vue',
             })
           }
         }
@@ -306,7 +306,7 @@ class VueHelper {
   /** Inject configured tracing hooks into Vue's component lifecycles */
   private _startTracing(): void {
     const applyTracingHooks = this._applyTracingHooks
-    // TODO check this message is right... we don't currently do this
+    // TODO this message is being printed... figure out why
     const appliedTracingHooks = setTimeout(() => {
       logger.warn(
         "Didn't apply tracing hooks, make sure you call Sentry.init before initialzing Vue!"
@@ -326,22 +326,22 @@ class VueHelper {
     const currentErrorHandler = this._options.app.config.errorHandler
 
     this._options.app.config.errorHandler = (
-      error: Error,
-      vm?: ComponentPublicInstance,
+      err: unknown,
+      vm: ComponentPublicInstance | null,
       info?: string
     ): void => {
       const metadata: Metadata = {}
 
       if (vm) {
         try {
-          const instance = vm._ || vm
+          const instance = (vm as any)._ || vm
           metadata.componentName = this._getComponentName(instance)
 
           if (this._options.attachProps) {
             metadata.propsData = vm.$props
           }
         } catch (_oO) {
-          logger.warn("Unable to extract metadata from Vue component.")
+          logger.warn('Unable to extract metadata from Vue component.')
         }
       }
 
@@ -353,19 +353,19 @@ class VueHelper {
       // to make sure that all breadcrumbs are recorded in time.
       setTimeout(() => {
         getCurrentHub().withScope(scope => {
-          scope.setContext("vue", metadata)
-          getCurrentHub().captureException(error)
+          scope.setContext('vue', metadata)
+          getCurrentHub().captureException(err)
         })
       })
 
-      if (typeof currentErrorHandler === "function") {
-        currentErrorHandler.call(this._options.app, error, vm, info)
+      if (typeof currentErrorHandler === 'function') {
+        currentErrorHandler.call(this._options.app, err, vm, info)
       }
 
       if (this._options.logErrors) {
-        warn(`Error in ${info}: "${error && error.toString()}"`, vm)
+        warn(`Error in ${info}: '${err && (err as any).toString()}'`, vm)
         // eslint-disable-next-line no-console
-        console.error(error)
+        console.error(err)
       }
     }
   }
@@ -377,16 +377,15 @@ class VueHelper {
 export function init(
   options: WithOptional<
     VueOptions,
-    "attachProps" | "logErrors" | "tracingOptions"
+    'attachProps' | 'logErrors' | 'tracingOptions'
   >
 ): void {
   const finalOptions = {
-    app: null,
     attachProps: true,
     logErrors: false,
     ...options,
     tracingOptions: {
-      hooks: ["activate", "mount", "update"],
+      hooks: ['activate', 'mount', 'update'],
       timeout: 2000,
       trackComponents: false,
       ...options.tracingOptions,
@@ -395,10 +394,10 @@ export function init(
 
   finalOptions._metadata = finalOptions._metadata || {}
   finalOptions._metadata.sdk = {
-    name: "sentry.javascript.vue3",
+    name: 'sentry.javascript.vue3',
     packages: [
       {
-        name: "npm@tjk/sentry-vue3",
+        name: 'npm@tjk/sentry-vue3',
         version: VERSION,
       },
     ],
@@ -407,8 +406,8 @@ export function init(
 
   browserInit(finalOptions)
   if (!finalOptions.app) {
-    logger.warn("No Vue app instance was provided.")
-    logger.warn("We will only capture global unhandled errors.")
+    logger.warn('No Vue app instance was provided.')
+    logger.warn('We will only capture global unhandled errors.')
   } else {
     const vueHelper = new VueHelper(finalOptions)
     vueHelper.setup()
