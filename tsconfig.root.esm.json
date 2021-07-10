@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.root.json",
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es6"
+  }
+}

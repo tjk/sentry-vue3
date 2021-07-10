@@ -1,0 +1,35 @@
+{
+  "name": "@tjk/sentry-vue3",
+  "version": "6.2.3-alpha.0",
+  "repository": "git://github.com/tjk/sentry-vue3.git",
+  "homepage": "https://github.com/tjk/sentry-vue3",
+  "author": "Sentry, TJ Koblentz",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "esm/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@sentry/browser": "6.2.3",
+    "@sentry/types": "6.2.3"
+  },
+  "peerDependencies": {
+    "vue": "3.x",
+    "vue-router": "4.x"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.2",
+    "rollup": "^2.53.0",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-license": "^0.8.1",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-terser": "^4.0.4",
+    "rollup-plugin-typescript2": "^0.21.0",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "run-p build:es5 build:esm build:bundle",
+    "build:bundle": "rollup --config",
+    "build:es5": "tsc -p tsconfig.build.json",
+    "build:esm": "tsc -p tsconfig.esm.json"
+  }
+}
