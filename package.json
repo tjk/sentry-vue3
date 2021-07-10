@@ -1,6 +1,6 @@
 {
   "name": "@tjk/sentry-vue3",
-  "version": "6.2.3-alpha.1",
+  "version": "6.2.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/tjk/sentry-vue3.git"
