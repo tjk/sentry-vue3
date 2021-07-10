@@ -22,6 +22,7 @@ jobs:
           git config --global user.email "tj.koblentz@gmail.com"
           git config --global user.name "TJ Koblentz (CI)"
       # XXX just assume fail to publish because version overwrite... yolo
-      - run: npx release-it --no-increment --nmp.tag latest --npm.skipChecks --ci || true
+      - run: |
+          npx release-it --no-increment --npm.skipChecks --ci && npm dist-tag add @tjk/sentry-vue3@$(node -p -e "require('./package.json').version") latest || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TJK_TOKEN }}
