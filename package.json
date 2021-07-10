@@ -1,6 +1,9 @@
 {
   "name": "@tjk/sentry-vue3",
   "version": "6.2.3-alpha.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/tjk/sentry-vue3.git"

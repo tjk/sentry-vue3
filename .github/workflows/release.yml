@@ -21,6 +21,6 @@ jobs:
       - run: |
           git config --global user.email "tj.koblentz@gmail.com"
           git config --global user.name "TJ Koblentz (CI)"
-      - run: npx release-it --npm.skipChecks --ci
+      - run: npx release-it --no-increment --npm.skipChecks --ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TJK_TOKEN }}
