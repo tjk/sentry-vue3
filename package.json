@@ -1,10 +1,15 @@
 {
   "name": "@tjk/sentry-vue3",
-  "version": "6.2.3",
+  "version": "6.2.3-alpha.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/tjk/sentry-vue3.git"
   },
+  "files": [
+    "build/*",
+    "dist/*",
+    "esm/*"
+  ],
   "homepage": "https://github.com/tjk/sentry-vue3",
   "author": "Sentry, TJ Koblentz",
   "license": "MIT",
