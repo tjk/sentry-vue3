@@ -1,5 +1,9 @@
 # @tjk/sentry-vue3
 
+**DO NOT USE THIS! OFFICIAL VERSION OUT: https://github.com/getsentry/sentry-javascript/issues/2925#issuecomment-881355619**
+
+---
+
 EXPERIMENTAL: Use at own risk!
 
 Possible issues:
